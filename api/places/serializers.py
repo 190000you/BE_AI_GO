@@ -32,3 +32,4 @@ class PlaceModelSerializer(ModelSerializer):
     class Meta:
         model = Place
         fields = "__all__"
+

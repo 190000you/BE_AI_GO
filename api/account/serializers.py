@@ -11,6 +11,11 @@ from .models import User
 class UserModelSerializer(ModelSerializer):
     class Meta:
         model = User
+        fields = ['uid', 'email', 'username']
+
+class UserDetailSerializer(ModelSerializer):
+    class Meta:
+        model = User
         fields = "__all__"
 
 ## 회원가입

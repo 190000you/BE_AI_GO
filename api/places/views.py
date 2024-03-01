@@ -35,3 +35,4 @@ class TagView(ModelViewSet):
 class ReviewView(ModelViewSet):
     serializer_class = ReviewModelSerializer
     queryset = Review.objects.all()
+
