@@ -19,7 +19,7 @@ from django.urls import path, include
 
 from rest_framework import routers
 
-from .views import PlaceView, TagView, ReviewView
+from .views import PlaceView, TagView, ReviewView, PlaceFindView
 
 namespace = "manager"
 
@@ -35,4 +35,5 @@ urlpatterns = [
     path(r'', include(router_place.urls)),
     path(r'', include(router_tag.urls)),
     path(r'', include(router_review.urls)),
+    path("find/", PlaceFindView.as_view())
 ]

@@ -7,8 +7,8 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Schedule(models.Model):
-    start_date = models.DateField(verbose_name='일정시작시각')
-    end_date = models.DateField(verbose_name='일정종료시각')
+    start_date = models.DateTimeField(verbose_name='일정시작시각')
+    end_date = models.DateTimeField(verbose_name='일정종료시각')
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     plan = models.ForeignKey(to='Plan', on_delete=models.CASCADE)
     

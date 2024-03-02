@@ -22,7 +22,7 @@ import time
 from config import settings
 
 # Read csv file.
-df = pd.read_excel(r"C:\Users\user\Desktop\BE_AI_GO\api\data.xlsx", engine="openpyxl")
+df = pd.read_excel(r"C:\Users\horai\Desktop\BE_AI_GO\api\data.xlsx", engine="openpyxl")
 
 for index, row in df.iterrows():
     place = Place.objects.create(

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField
 
 from .models import Place, Tag, Review
 
@@ -32,4 +32,33 @@ class PlaceModelSerializer(ModelSerializer):
     class Meta:
         model = Place
         fields = "__all__"
+    
+# class PlaceSearchSerializer(ModelSerializer):
+#     name = CharField(write_only=True, max_length=150)
+
+#     class Meta:
+#         model = Place
+#         fields = ["name"]
+
+#     def validate(self, data):
+#         name = data.get("name")
+
+#         place = Place.objects.filter(name=name)
+#         if not place.exists():
+#             serializers.ValidationError("Invalid Place")
+#         data['place'] = PlaceModelSerializer(place, many=True).data
+#         return data
+
+class PlaceSearchSerializer(ModelSerializer):
+    name = CharField(write_only=True, max_length=150)
+
+    class Meta:
+        model = Place
+        fields = ["name"]
+
+class SchedulePlaceSerializer(ModelSerializer):
+    class Meta:
+        model = Place
+        fields = ["name"]
+
 
