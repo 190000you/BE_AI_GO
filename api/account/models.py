@@ -80,15 +80,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     ROLES = (("User", "user"), ("superuser", "manager"))
 
     role = models.CharField(max_length=20, choices=ROLES, default="user")
-
-    username = models.CharField(max_length=150, unique=True)
+    email = models.CharField(max_length=150)
+    uid = models.CharField(max_length=150, unique=True)
+    username = models.CharField(max_length=150)
     password_check = models.CharField(max_length=150)
-
     start_date = models.DateTimeField(default=timezone.now)
-
+    
     # is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
+    REQUIRED_FIELDS = ['uemail', 'username']
     objects = UserManager()
-    USERNAME_FIELD = "username"
+    USERNAME_FIELD = "uid"

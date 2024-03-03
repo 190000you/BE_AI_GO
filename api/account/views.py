@@ -4,10 +4,12 @@ from rest_framework import views, generics, status
 from rest_framework.response import Response
 from rest_framework.authentication import authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
-
+from django.shortcuts import get_object_or_404
 
 from .models import User
-from .serializers import SignUpSerializer, UserModelSerializer, LogInSerializer, AuthSerializer, ChangePassWordSerializer
+from places.models import Review
+from places.serializers import ReviewModelSerializer
+from .serializers import SignUpSerializer, UserModelSerializer, UserDetailSerializer, LogInSerializer, AuthSerializer, ChangePassWordSerializer
 
 # Create your views here.
 
@@ -16,7 +18,33 @@ class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserModelSerializer
 
+class UserDetailView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
 
+    lookup_url_kwarg = 'uid'
+    def get_serializer_class(self):
+        return UserDetailSerializer if self.request.method == 'GET' else UserModelSerializer
+    
+    def get_object(self):
+        uid = self.kwargs.get('uid')
+        return get_object_or_404(User, uid=uid)
+
+class UserReviewListView(generics.ListAPIView):
+    serializer_class = ReviewModelSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        uid = self.kwargs.get('uid')
+        user = get_object_or_404(User, uid=uid)
+        return Review.objects.filter(writer=user)
+    
+    def get_object(self):
+        uid = self.kwargs.get('uid')
+        return get_object_or_404(User, uid=uid)
+    
 class UserSignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
     

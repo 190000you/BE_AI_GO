@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-
-User = get_user_model()
-
+from account.models import User
 
 class Place(models.Model):
     name = models.CharField(verbose_name="장소명", max_length=150)
@@ -36,8 +34,7 @@ class Review(models.Model):
         to="Place", on_delete=models.CASCADE
     )  # 1:N 관계일 경우, N이 되는 쪽에 ForeignKey를 해줘야 함. to와 on_delete는 필수고 to에는 1의 클래스 이름을 넣자.cc
     writer = models.ForeignKey(
-        to=User, on_delete=models.CASCADE, null=False, blank=False
+        to=User, on_delete=models.CASCADE, null=False, blank=False, related_name='reviews'
     )
-
     def __str__(self):
         return self.content

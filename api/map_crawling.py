@@ -23,7 +23,7 @@ from difflib import SequenceMatcher
 import re
 from config import settings
 
-df = pd.read_excel(r"C:\work_django\BE_AI_GO\api\data.xlsx", engine="openpyxl")
+df = pd.read_csv(r"C:\work_django\BE_AI_GO\api\dataset.csv", encoding='CP949')
 
 chrom_options = Options()
 chrom_options.add_experimental_option("detach", True)
@@ -43,44 +43,45 @@ for index, row in df.iterrows():
     search.clear()
     search.send_keys(row["street_name_address"])
     search.send_keys(Keys.ENTER)
-    time.sleep(3)
-    
-    more_btn = driver.find_element(By.CLASS_NAME,"link_more")
-    more_btn.click()
-    time.sleep(3)
+    time.sleep(1)
+    try:
+        more_btn = driver.find_element(By.CLASS_NAME,"link_more")
+        more_btn.click()
+        time.sleep(1)
 
-    # 유사도 측정
-    best_ratio = 0 # temp ratio
-    best_element = None
+        # 유사도 측정
+        best_ratio = 0 # temp ratio
+        best_element = None
     
-    names = driver.find_elements(By.CSS_SELECTOR, "#sub_panel > div > div > div > div > div > div > button > div > div > strong")
-    for name in names:
-        name_text = name.text
-        ratio = SequenceMatcher(None, row["name"], name_text).ratio()
-        if best_ratio < ratio:
-            best_ratio = ratio
-            best_element = name
+        names = driver.find_elements(By.CSS_SELECTOR, "#sub_panel > div > div > div > div > div > div > button > div > div > strong")
+        for name in names:
+            name_text = name.text
+            ratio = SequenceMatcher(None, row["name"], name_text).ratio()
+            if best_ratio < ratio:
+                best_ratio = ratio
+                best_element = name
             
-    if best_ratio:
-        best_element.click()
-        time.sleep(5)
-        
-        # iframe으로 전환
-        iframe = driver.find_element(By.CSS_SELECTOR, "iframe#entryIframe")
-        driver.switch_to.frame(iframe)
+        if best_ratio:
+            best_element.click()
+            time.sleep(1)
+    except NoSuchElementException:
+        pass
+    # iframe으로 전환
+    iframe = driver.find_element(By.CSS_SELECTOR, "iframe#entryIframe")
+    driver.switch_to.frame(iframe)
 
-        # 이미지 요소 찾기
-        image_element = driver.find_element(By.CLASS_NAME, "K0PDV")
+    # 이미지 요소 찾기
+    image_element = driver.find_element(By.CLASS_NAME, "K0PDV")
 
-        # 이미지 스타일 속성 가져오기
-        style_attribute = image_element.get_attribute("style")
+    # 이미지 스타일 속성 가져오기
+    style_attribute = image_element.get_attribute("style")
 
-        # 스타일 속성에서 이미지 URL 추출
-        url_match = re.search(r"url\((.*?)\)", style_attribute)
-        if url_match:
-            image_url = url_match.group(1)
-            url_without_quotes = re.sub(r'"', '', image_url)
-            print(url_without_quotes)
+    # 스타일 속성에서 이미지 URL 추출
+    url_match = re.search(r"url\((.*?)\)", style_attribute)
+    if url_match:
+        image_url = url_match.group(1)
+        url_without_quotes = re.sub(r'"', '', image_url)
+        print(url_without_quotes)
 
         df.loc[index, "image"] = url_without_quotes
 
@@ -92,4 +93,6 @@ for index, row in df.iterrows():
 
     else:
         print("No matching element found.")
+    
+df.to_csv("C:\\Users\\als00\\Desktop\\캡스톤_files\\image_data.csv")
 
