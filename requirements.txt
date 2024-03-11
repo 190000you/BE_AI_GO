@@ -7,3 +7,6 @@ pandas
 selenium
 foliume
 bs4
+streamlit
+numpy
+sklearn
