@@ -11,7 +11,7 @@ from .models import User
 class UserModelSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['uid', 'email', 'username']
+        fields = ['userId', 'userEmail', 'userName']
 
 class UserDetailSerializer(ModelSerializer):
     class Meta:
@@ -20,35 +20,35 @@ class UserDetailSerializer(ModelSerializer):
 
 ## 회원가입
 class SignUpSerializer(ModelSerializer):
-    username = CharField(write_only=True, max_length=150)
-    password = CharField(write_only=True, max_length=128)
-    password_check = CharField(write_only=True, required=True)
+    userName = CharField(write_only=True, max_length=150)
+    userPassword = CharField(write_only=True, max_length=128)
+    userPasswordCheck = CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ["username", "role", "password", "password_check"]
+        fields = ["userName", "userPassword", "userPasswordCheck"]
 
     def validate(self, attrs):
-        if attrs["password"] != attrs["password_check"]:
+        if attrs["userPassword"] != attrs["userPasswordCheck"]:
             raise ValidationError({"password": "Password fields didn't match."})
         return attrs
 
     def create(self, validated_data):
-        if validated_data.get("role") == "superuser":
-            validated_data["is_active"] = True
-            validated_data["is_staff"] = True
-            validated_data["is_superuser"] = True
-        validated_data.pop("password_check")
+        #if validated_data.get("role") == "superuser":
+        #    validated_data["is_active"] = True
+        #    validated_data["is_staff"] = True
+        #    validated_data["is_superuser"] = True
+        validated_data.pop("userPasswordCheck")
         user = User.objects.create_user(**validated_data)
         return user
     
 ## 로그인
 class LogInSerializer(serializers.Serializer):
-    username = CharField(write_only=True, max_length=150)
-    password = CharField(write_only=True, max_length=128)
+    userName = CharField(write_only=True, max_length=150)
+    userPassword = CharField(write_only=True, max_length=128)
 
     def validate(self, data):
-        user = authenticate(username=data["username"], password=data["password"])
+        user = authenticate(username=data["userName"], password=data["userPassword"])
         if user is None:
             if user is None:
                 raise serializers.ValidationError("Invalid username or password.")
@@ -57,12 +57,12 @@ class LogInSerializer(serializers.Serializer):
         return {"user": user}
     
 class AuthSerializer(serializers.Serializer):
-    username = CharField(write_only=True, max_length=150)
+    userName = CharField(write_only=True, max_length=150)
 
     def validate(self, data):
-        username = data.get("username")
+        userName = data.get("userName")
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(userName=userName)
         except User.DoesNotExist:
             raise serializers.ValidationError("Invalid username")
         if not user.is_active:
@@ -71,14 +71,14 @@ class AuthSerializer(serializers.Serializer):
         return data
     
 class ChangePassWordSerializer(serializers.Serializer):
-    username = CharField(write_only=True, max_length=150)
+    userName = CharField(write_only=True, max_length=150)
     new_password = CharField(write_only=True, max_length=128)
     check_new_password = CharField(write_only=True, max_length=128)
 
     def validate(self, data):
-        username = data.get("username")
+        userName = data.get("username")
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(userName=userName)
         except User.DoesNotExist:
             raise serializers.ValidationError("Invalid username")
         if not user.is_active:

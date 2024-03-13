@@ -21,13 +21,13 @@ class UserListView(generics.ListAPIView):
 class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
 
-    lookup_url_kwarg = 'uid'
+    lookup_url_kwarg = 'userId'
     def get_serializer_class(self):
         return UserDetailSerializer if self.request.method == 'GET' else UserModelSerializer
     
     def get_object(self):
-        uid = self.kwargs.get('uid')
-        return get_object_or_404(User, uid=uid)
+        userId = self.kwargs.get('userId')
+        return get_object_or_404(User, userId=userId)
 
 class UserReviewListView(generics.ListAPIView):
     serializer_class = ReviewModelSerializer
@@ -37,13 +37,13 @@ class UserReviewListView(generics.ListAPIView):
         This view should return a list of all the purchases
         for the currently authenticated user.
         """
-        uid = self.kwargs.get('uid')
-        user = get_object_or_404(User, uid=uid)
+        userId = self.kwargs.get('userId')
+        user = get_object_or_404(User, userId=userId)
         return Review.objects.filter(writer=user)
     
     def get_object(self):
-        uid = self.kwargs.get('uid')
-        return get_object_or_404(User, uid=uid)
+        userId = self.kwargs.get('userId')
+        return get_object_or_404(User, userId=userId)
     
 class UserSignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
@@ -52,7 +52,7 @@ class UserSignUpView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
-            user.set_password(serializer.validated_data['password'])
+            user.set_password(serializer.validated_data['userPassword'])
             user.save()
 
             token = TokenObtainPairSerializer.get_token(user)
@@ -114,7 +114,7 @@ class AuthView(generics.GenericAPIView):
             refresh_token = str(token)
             access_token = str(token.access_token)
             res_data = {
-                "user": user_data_serializer.data["username"],
+                "user": user_data_serializer.data["userName"],
                 "message": "login success",
                 "token": {
                     "access": access_token,
