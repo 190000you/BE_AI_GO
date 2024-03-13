@@ -77,19 +77,19 @@ class UserManager(DjangoUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    ROLES = (("User", "user"), ("superuser", "manager"))
+    # ROLES = (("User", "user"), ("superuser", "manager"))
 
-    role = models.CharField(max_length=20, choices=ROLES, default="user")
-    email = models.CharField(max_length=150)
-    uid = models.CharField(max_length=150, unique=True)
-    username = models.CharField(max_length=150)
-    password_check = models.CharField(max_length=150)
+    # role = models.CharField(max_length=20, choices=ROLES, default="user")
+    userEmail = models.CharField(max_length=150)
+    userId = models.CharField(max_length=150, unique=True)
+    userName = models.CharField(max_length=150)
+    userPassword = models.CharField(max_length=150)
     start_date = models.DateTimeField(default=timezone.now)
     
     # is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
-    REQUIRED_FIELDS = ['uemail', 'username']
+    REQUIRED_FIELDS = ['userEmail', 'userName']
     objects = UserManager()
-    USERNAME_FIELD = "uid"
+    USERNAME_FIELD = "userId"
