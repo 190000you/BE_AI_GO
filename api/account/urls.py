@@ -26,7 +26,7 @@ urlpatterns = [
     path("list/<str:userId>", UserDetailView.as_view()),
     path("list/<str:userId>/reviews", UserReviewListView.as_view()),
     path("signup/", UserSignUpView.as_view()),
-    path("login/", TokenObtainPairView.as_view()),
+    path("login/", UserLogInView.as_view()),
     path("userauth/", AuthView.as_view()),
     path("changepassword/", ChangePasswordView.as_view()),
 ]

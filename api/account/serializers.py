@@ -46,14 +46,13 @@ class SignUpSerializer(ModelSerializer):
     
 ## 로그인
 class LogInSerializer(serializers.Serializer):
-    userName = CharField(write_only=True, max_length=150)
+    userId = CharField(write_only=True, max_length=150)
     userPassword = CharField(write_only=True, max_length=128)
 
     def validate(self, data):
         user = authenticate(username=data["userId"], password=data["userPassword"])
         if user is None:
-            if user is None:
-                raise serializers.ValidationError("Invalid username or password.")
+            raise serializers.ValidationError("Invalid username or password.")
         if not user.is_active:
             raise serializers.ValidationError("User is not active.")
         return {"user": user}
