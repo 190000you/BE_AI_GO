@@ -20,13 +20,15 @@ class UserDetailSerializer(ModelSerializer):
 
 ## 회원가입
 class SignUpSerializer(ModelSerializer):
-    userName = CharField(write_only=True, max_length=150)
-    userPassword = CharField(write_only=True, max_length=128)
+    userEmail = CharField(write_only=True, max_length=150)
+    userId = CharField(write_only=True, max_length=128)
+    userName = CharField(write_only=True, required=True)
+    userPassword = CharField(write_only=True, required=True)
     userPasswordCheck = CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ["userName", "userPassword", "userPasswordCheck"]
+        fields = ["userEmail", "userId", "userName", "userPassword", "userPasswordCheck"]
 
     def validate(self, attrs):
         if attrs["userPassword"] != attrs["userPasswordCheck"]:
@@ -48,7 +50,7 @@ class LogInSerializer(serializers.Serializer):
     userPassword = CharField(write_only=True, max_length=128)
 
     def validate(self, data):
-        user = authenticate(username=data["userName"], password=data["userPassword"])
+        user = authenticate(username=data["userId"], password=data["userPassword"])
         if user is None:
             if user is None:
                 raise serializers.ValidationError("Invalid username or password.")
@@ -60,11 +62,11 @@ class AuthSerializer(serializers.Serializer):
     userName = CharField(write_only=True, max_length=150)
 
     def validate(self, data):
-        userName = data.get("userName")
+        userName = data.get("userId")
         try:
             user = User.objects.get(userName=userName)
         except User.DoesNotExist:
-            raise serializers.ValidationError("Invalid username")
+            raise serializers.ValidationError("Invalid userId")
         if not user.is_active:
             raise serializers.ValidationError("User is not active")
         data['user'] = user
@@ -76,7 +78,7 @@ class ChangePassWordSerializer(serializers.Serializer):
     check_new_password = CharField(write_only=True, max_length=128)
 
     def validate(self, data):
-        userName = data.get("username")
+        userName = data.get("userId")
         try:
             user = User.objects.get(userName=userName)
         except User.DoesNotExist:

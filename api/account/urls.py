@@ -23,8 +23,8 @@ namespace = "account"
 
 urlpatterns = [
     path("list/", UserListView.as_view()),
-    path("list/<str:uid>", UserDetailView.as_view()),
-    path("list/<str:uid>/reviews", UserReviewListView.as_view()),
+    path("list/<str:userId>", UserDetailView.as_view()),
+    path("list/<str:userId>/reviews", UserReviewListView.as_view()),
     path("signup/", UserSignUpView.as_view()),
     path("login/", TokenObtainPairView.as_view()),
     path("userauth/", AuthView.as_view()),

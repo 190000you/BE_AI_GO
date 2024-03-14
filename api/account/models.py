@@ -55,25 +55,25 @@ from django.contrib.auth.models import (
 
 
 class UserManager(DjangoUserManager):
-    def _create_user(self, username, password, **extra_fields):
-        if not username:
+    def _create_user(self, userId, userPassword, **extra_fields):
+        if not userId:
             raise ValueError("아이디를 입력해주세요.")
 
-        user = self.model(username=username, **extra_fields)
-        user.set_password(password)
+        user = self.model(userId=userId, **extra_fields)
+        user.set_password(userPassword)
         user.save(using=self._db)
 
         return user
 
-    def create_user(self, username, password=None, **extra_fields):
+    def create_user(self, userId, userPassword=None, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
-        return self._create_user(username, password, **extra_fields)
+        return self._create_user(userId, userPassword, **extra_fields)
 
-    def create_superuser(self, username, password=None, **extra_fields):
+    def create_superuser(self, userId, userPassword=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-        return self._create_user(username, password, **extra_fields)
+        return self._create_user(userId, userPassword, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
