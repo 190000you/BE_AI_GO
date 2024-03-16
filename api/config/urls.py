@@ -37,7 +37,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("account/", include("account.urls")),
+    path("user/", include("account.urls")),
     path("manager/", include("places.urls")),
     path("plan/", include("plans.urls")),
     #re_path(r'^media/(?P<path>.*)$', serve, {'document_root':settings.MEDIA_ROOT}),
