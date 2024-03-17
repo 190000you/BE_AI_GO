@@ -4,12 +4,15 @@ from rest_framework import views, generics, status
 from rest_framework.response import Response
 from rest_framework.authentication import authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 
 from .models import User
 from places.models import Review
 from places.serializers import ReviewModelSerializer
 from .serializers import SignUpSerializer, UserModelSerializer, UserDetailSerializer, LogInSerializer, AuthSerializer, ChangePassWordSerializer
+from permission import IsOnlyUser
 
 # Create your views here.
 
@@ -19,6 +22,9 @@ class UserListView(generics.ListAPIView):
     serializer_class = UserModelSerializer
 
 class UserDetailView(generics.RetrieveAPIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsOnlyUser, IsAdminUser]
     queryset = User.objects.all()
 
     lookup_url_kwarg = 'userId'
