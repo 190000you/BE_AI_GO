@@ -19,7 +19,7 @@ from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .views import UserListView, UserDetailView, UserSignUpView, UserLogInView, AuthView, ChangePasswordView, UserReviewListView
 
-namespace = "account"
+namespace = "user"
 
 urlpatterns = [
     path("list/", UserListView.as_view()),
