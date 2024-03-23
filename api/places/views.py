@@ -44,7 +44,7 @@ class PlaceFindView(generics.GenericAPIView):
     def post(self, request):
         name = request.data.get('name')
         if name:
-            place = Place.objects.filter(name=name)
+            place = Place.objects.filter(name__contains=name)
             if not place.exists():
                 return Response({'error': 'No place found with this name'}, status=status.HTTP_404_NOT_FOUND)
             serializer = PlaceModelSerializer(place, many=True)
