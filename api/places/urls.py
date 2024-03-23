@@ -21,7 +21,7 @@ from rest_framework import routers
 
 from .views import PlaceView, TagView, ReviewView, PlaceFindView
 
-namespace = "manager"
+namespace = "places"
 
 router_place = routers.DefaultRouter()
 router_tag = routers.DefaultRouter()
