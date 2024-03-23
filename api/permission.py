@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-class IsOnlyUser(permissions.BasePermission):
+class IsOnerAdminUser(permissions.BasePermission):
     def has_permission(self, request, view):
         # URL에서 userId를 추출
         userId = view.kwargs.get('userId')
