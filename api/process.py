@@ -2,24 +2,23 @@ import os
 import pandas as pd
 import django
 
-# Django 설정을 로드합니다.
+# Django 설정을 로드
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 from places.models import Place, Tag
 
-# CSV 파일을 읽어옵니다.
+# CSV
 df = pd.read_csv(r"C:\Users\horai\Desktop\BE_AI_GO\api\dataset_test.csv", encoding='utf-8')
 
-# CSV 파일의 각 행에 대해 반복합니다.
 for index, row in df.iterrows():
-    # 태그 문자열을 공백을 기준으로 분리하여 리스트로 변환합니다.
+    # 공백 기준으로 list로 불러오기
     tag_list = list(str(row["tag"]).split())
     
-    # 주차 여부에 따라 불리언 값을 설정합니다.
+    # 주차 여부 bool로 넣기
     parking_bool = (row["parking"] == "유")
     
-    # 장소 인스턴스를 생성합니다.
+    # db에 넣기
     place = Place.objects.create(
         name=row["name"],
         image=None,
@@ -33,7 +32,7 @@ for index, row in df.iterrows():
         time=row["time"]
     )
     
-    # 장소와 태그를 연결합니다.
+    # 태그 추가
     for tag_name in tag_list:
         tag, _ = Tag.objects.get_or_create(name=tag_name)
         place.tag.add(tag)
