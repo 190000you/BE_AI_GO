@@ -61,7 +61,7 @@ class AuthSerializer(serializers.Serializer):
     userName = CharField(write_only=True, max_length=150)
 
     def validate(self, data):
-        userName = data.get("userId")
+        userName = data.get("userName")
         try:
             user = User.objects.get(userName=userName)
         except User.DoesNotExist:
@@ -77,7 +77,7 @@ class ChangePassWordSerializer(serializers.Serializer):
     check_new_password = CharField(write_only=True, max_length=128)
 
     def validate(self, data):
-        userName = data.get("userId")
+        userName = data.get("userName")
         try:
             user = User.objects.get(userName=userName)
         except User.DoesNotExist:
