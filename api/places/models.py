@@ -7,12 +7,16 @@ class Place(models.Model):
     image = models.ImageField(null=True, blank=True)
     classification = models.CharField(verbose_name="업종", max_length=150)
     street_name_address = models.TextField(verbose_name="도로명주소", max_length=150)
-    hardness = models.FloatField(verbose_name="경도")
-    latitude = models.FloatField(verbose_name="위도")
-    # tag = models.ForeignKey(to="Tag", on_delete=models.CASCADE)
-    like = models.IntegerField(verbose_name="좋아요수", default=0)
+    parking = models.BooleanField(verbose_name="주차_유/무", default=False)
     info = models.TextField(verbose_name="장소정보")
     call = models.CharField(verbose_name="전화번호", max_length=150)
+    hardness = models.FloatField(verbose_name="경도")
+    latitude = models.FloatField(verbose_name="위도")
+    tag = models.ManyToManyField("Tag", related_name='places')
+    time = models.TextField(verbose_name="체류시간")
+    # like = models.IntegerField(verbose_name="좋아요수", default=0)
+    # info = models.TextField(verbose_name="장소정보")
+    # call = models.CharField(verbose_name="전화번호", max_length=150)
 
     def __str__(self):
         return self.name

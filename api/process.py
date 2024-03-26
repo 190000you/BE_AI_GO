@@ -1,39 +1,40 @@
-import pandas as pd
-
-# 프로젝트에 startapps 명령어로 생성되지 않은 파일에서 장고에 등록된 모델이나 함수를 사용할 때 다음과 같은 에러가 발생한다.
-
-# django.core.exceptions.ImproperlyConfigured: Requested setting INSTALLED_APPS, but settings are not configured.
-# You must either define the environment variable DJANGO_SETTINGS_MODULE or call settings.configure() before accessing settings.
-
-# 이를 해결하기 위해선 환경을 장고에 맞춰주기 위해서 다음과 같은 코드를 from user.models import model 과 같은 파일 위쪽에 선언해준다.
-
 import os
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-
+import pandas as pd
 import django
 
+# Django 설정을 로드
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 from places.models import Place, Tag
 
-import time
-
-from config import settings
-
-# Read csv file.
-df = pd.read_excel(r"/srv/BE_AI_GO/api/data.xlsx", engine="openpyxl")
+# CSV
+df = pd.read_csv(r"C:\Users\horai\Desktop\BE_AI_GO\api\dataset_test.csv", encoding='utf-8')
 
 for index, row in df.iterrows():
+    # 공백 기준으로 list로 불러오기
+    tag_list = list(str(row["tag"]).split())
+    
+    # 주차 여부 bool로 넣기
+    parking_bool = (row["parking"] == "유")
+    
+    # db에 넣기
     place = Place.objects.create(
         name=row["name"],
-        # image=row["image"],
+        image=None,
         classification=row["classification"],
-        street_name_address=row["street_name_address"],
-        hardness=row["hardness"],
-        latitude=row["latitude"],
-        like=row["like"],
+        street_name_address=row["street_name_adress"],
+        parking=parking_bool,
         info=row["info"],
         call=row["call"],
+        hardness=row["hardness"],
+        latitude=row["latitude"],
+        time=row["time"]
     )
-    place.save()
+    
+    # 태그 추가
+    for tag_name in tag_list:
+        tag, _ = Tag.objects.get_or_create(name=tag_name)
+        place.tag.add(tag)
+
+    place.save()  # 장소를 저장합니다.
