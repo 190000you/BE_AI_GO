@@ -58,12 +58,12 @@ class LogInSerializer(serializers.Serializer):
         return {"user": user}
     
 class AuthSerializer(serializers.Serializer):
-    userName = CharField(write_only=True, max_length=150)
+    userId = CharField(write_only=True, max_length=150)
 
     def validate(self, data):
-        userName = data.get("userName")
+        userId = data.get("userId")
         try:
-            user = User.objects.get(userName=userName)
+            user = User.objects.get(userId=userId)
         except User.DoesNotExist:
             raise serializers.ValidationError("Invalid userId")
         if not user.is_active:

@@ -123,7 +123,7 @@ class AuthView(generics.GenericAPIView):
             refresh_token = str(token)
             access_token = str(token.access_token)
             res_data = {
-                "user": user_data_serializer.data["userName"],
+                "user": user_data_serializer.data["userId"],
                 "message": "login success",
                 "token": {
                     "access": access_token,
