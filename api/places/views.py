@@ -12,7 +12,6 @@ from .serializers import PlaceModelSerializer, TagModelSerializer, ReviewModelSe
 
 # Create your views here.
 
-
 class PlaceView(ModelViewSet):
     serializer_class = PlaceModelSerializer
     queryset = Place.objects.all()

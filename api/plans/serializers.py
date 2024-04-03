@@ -1,6 +1,5 @@
 from rest_framework.serializers import ModelSerializer, CharField, DateTimeField, StringRelatedField
 
-from places.serializers import SchedulePlaceSerializer
 from places.models import Place
 
 from .models import Schedule, Plan

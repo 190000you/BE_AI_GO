@@ -58,7 +58,22 @@ class LogInSerializer(serializers.Serializer):
         return {"user": user}
     
 class AuthSerializer(serializers.Serializer):
-    userId = CharField(write_only=True, max_length=150)
+    userPassword= CharField(write_only=True, max_length=150)
+
+    def validate(self, data):
+        userPassword = data.get("userPassword")
+        try:
+            user = User.objects.get(userPassword=userPassword)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Invalid userId")
+        if not user.is_active:
+            raise serializers.ValidationError("User is not active")
+        data['user'] = user
+        return data
+    
+class ChangePassWordSerializer(serializers.Serializer):
+    new_password = CharField(write_only=True, max_length=128)
+    check_new_password = CharField(write_only=True, max_length=128)
 
     def validate(self, data):
         userId = data.get("userId")
@@ -68,23 +83,7 @@ class AuthSerializer(serializers.Serializer):
             raise serializers.ValidationError("Invalid userId")
         if not user.is_active:
             raise serializers.ValidationError("User is not active")
-        data['user'] = user
-        return data
-    
-class ChangePassWordSerializer(serializers.Serializer):
-    userName = CharField(write_only=True, max_length=150)
-    new_password = CharField(write_only=True, max_length=128)
-    check_new_password = CharField(write_only=True, max_length=128)
 
-    def validate(self, data):
-        userName = data.get("userName")
-        try:
-            user = User.objects.get(userName=userName)
-        except User.DoesNotExist:
-            raise serializers.ValidationError("Invalid username")
-        if not user.is_active:
-            raise serializers.ValidationError("User is not active")
-        
         if data["new_password"] != data["check_new_password"]:
             raise ValidationError({"password": "Password fields didn't match."})
         
