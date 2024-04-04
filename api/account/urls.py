@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .views import UserListView, UserDetailView, UserSignUpView, UserLogInView, AuthView, ChangePasswordView, UserReviewListView
+from .views import UserListView, UserDetailView, UserSignUpView, UserLogInView, AuthView, ChangePasswordView, UserReviewListView, UserLikeRegView,UserLikeView
 
 namespace = "user"
 
@@ -29,4 +29,6 @@ urlpatterns = [
     path("login/", UserLogInView.as_view()),
     path("userauth/", AuthView.as_view()),
     path("changepassword/", ChangePasswordView.as_view()),
+    path("likeplace/", UserLikeRegView.as_view()),
+    path("like/", UserLikeView.as_view()),
 ]

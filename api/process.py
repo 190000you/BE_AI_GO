@@ -9,7 +9,7 @@ django.setup()
 from places.models import Place, Tag
 
 # CSV
-df = pd.read_csv(r"C:\Users\horai\Desktop\BE_AI_GO\api\dataset_test.csv", encoding='utf-8')
+df = pd.read_csv(r"/Users/leehb/Desktop/BE_AI_GO/api/dataset.csv", encoding='utf-8')
 
 for index, row in df.iterrows():
     # 공백 기준으로 list로 불러오기

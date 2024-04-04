@@ -43,7 +43,8 @@ class PlaceModelSerializer(ModelSerializer):
             "latitude",
             "tag",
             "time",
-            "reviews"
+            "reviews",
+            "like"
         ]
     
 # class PlaceSearchSerializer(ModelSerializer):

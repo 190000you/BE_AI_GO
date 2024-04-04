@@ -14,7 +14,7 @@ class Place(models.Model):
     latitude = models.FloatField(verbose_name="위도")
     tag = models.ManyToManyField("Tag", related_name='places')
     time = models.TextField(verbose_name="체류시간")
-    # like = models.IntegerField(verbose_name="좋아요수", default=0)
+    like = models.ManyToManyField(User, related_name="liker")
     # info = models.TextField(verbose_name="장소정보")
     # call = models.CharField(verbose_name="전화번호", max_length=150)
 
