@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 
 from .models import User
+from places.models import Place
 
 
 class UserModelSerializer(ModelSerializer):
@@ -96,3 +97,15 @@ class ChangePassWordSerializer(serializers.Serializer):
         user.save()
     
         return user
+    
+class UserLikePlaceSerializer(serializers.ModelSerializer):
+    name = serializers.PrimaryKeyRelatedField(queryset=Place.objects.all())
+
+    class Meta:
+        model = Place
+        fields = ["name"]
+
+class UserLikePlaceViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Place
+        fields = ["name","image","classification","street_name_address"]

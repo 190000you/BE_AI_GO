@@ -9,9 +9,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 
 from .models import User
-from places.models import Review
+from places.models import Review, Place
 from places.serializers import ReviewModelSerializer
-from .serializers import SignUpSerializer, UserModelSerializer, UserDetailSerializer, LogInSerializer, AuthSerializer, ChangePassWordSerializer
+from .serializers import SignUpSerializer, UserModelSerializer, UserDetailSerializer, LogInSerializer, AuthSerializer, ChangePassWordSerializer, UserLikePlaceSerializer, UserLikePlaceViewSerializer
 from permission import IsOnerAdminUser
 
 # Create your views here.
@@ -149,3 +149,39 @@ class ChangePasswordView(generics.GenericAPIView):
             return Response("password changing complete!", status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        ## 장소 찜하기
+class UserLikeRegView(generics.GenericAPIView):
+    serializer_class = UserLikePlaceSerializer
+    authentication_classes = [JWTAuthentication]
+
+    # post매서드를 사용할때 로직
+    def post(self, request):
+        # 장소 이름을 받아와서
+        place_name = request.data.get('name')
+        # 디비에서 일치하는 장소를 찾기
+        place = get_object_or_404(Place, name=place_name)
+        # 해당하는 데이터의 like 칼럼에 좋아요 누른 user 추가
+        place.like.add(request.user)
+        # 변경사항 저장
+        place.save()
+
+        # 응답용 시리얼라이저 
+        serializer = self.get_serializer(place)
+        # 제대로 됐다는 응답
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+    
+    ## 찜 한 장소 조회
+class UserLikeView(generics.GenericAPIView):
+    serializer_class = UserLikePlaceViewSerializer
+    authentication_classes = [JWTAuthentication]
+
+    # get 매서드 사용할 때
+    def get(self, request):
+        # 디비에서 filter를 사용하여 로그인 한 유저에 해당하는 한개 또는 여러개의 장소 찾기
+        # objects.get 을 하면 안됨. 여러개의 장소가 return 될 수 있기때문
+        like_place = Place.objects.filter(like=request.user)
+        # many=True를 해주는 이유는 시리얼라이저는 단일 인스턴스를 처리하게 설계됐는데, 여러개의 인스턴스를 처리하기위해 many=True 속성을 준다
+        serializer = self.get_serializer(like_place, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
