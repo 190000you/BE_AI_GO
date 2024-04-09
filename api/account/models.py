@@ -83,7 +83,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # role = models.CharField(max_length=20, choices=ROLES, default="user")
     userEmail = models.CharField(max_length=150)
-    userId = models.CharField(max_length=150, unique=True)
+    userId = models.CharField(max_length=150, primary_key=True)
     userName = models.CharField(max_length=150)
     userPassword = models.CharField(max_length=150)
     start_date = models.DateTimeField(default=timezone.now)
