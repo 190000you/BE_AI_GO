@@ -91,6 +91,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
+    'USER_ID_FIELD' : 'userId'
 }
 
 WSGI_APPLICATION = "config.wsgi.application"
