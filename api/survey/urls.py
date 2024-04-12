@@ -8,7 +8,6 @@ from .views import AnswerView
 namespace = "survey"
 
 router_answer = routers.DefaultRouter()
-
 router_answer.register(r"enroll", AnswerView)
 
 urlpatterns = [
