@@ -40,7 +40,7 @@ urlpatterns = [
     path("user/", include("account.urls")),
     path("place/", include("places.urls")),
     path("plan/", include("plans.urls")),
-    path("servey/", include("servey.urls")),
+    path("survey/", include("survey.urls")),
     #re_path(r'^media/(?P<path>.*)$', serve, {'document_root':settings.MEDIA_ROOT}),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

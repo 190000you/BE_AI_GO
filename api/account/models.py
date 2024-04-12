@@ -7,7 +7,7 @@ from django.contrib.auth.models import (
     BaseUserManager as DjangoUserManager,
 )
 
-from servey.models import Answer
+from survey.models import Answer
 
 # # Create your models here.
 
@@ -92,7 +92,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
-    servey = models.OneToOneField(Answer, on_delete=models.CASCADE, null=True) # 설문조사 모델 1:1 관계
+    survey = models.OneToOneField(Answer, on_delete=models.CASCADE, null=True) # 설문조사 모델 1:1 관계
 
     REQUIRED_FIELDS = ['userEmail', 'userName']
     objects = UserManager()
