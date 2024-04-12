@@ -19,7 +19,7 @@ class AnswerView(ModelViewSet):
     def get_permissions(self):
         permission_classes = list()
         action = self.action
-            
+        
         if action == ['list', ' create', 'retrieve']:
             permission_classes = [AllowAny]
         elif action in ['update', 'partial_update', 'destroy']:

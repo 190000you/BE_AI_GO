@@ -22,7 +22,7 @@ class UserListView(generics.ListAPIView):
     serializer_class = UserModelSerializer
 
 class UserDetailView(generics.RetrieveAPIView):
-
+    
     authentication_classes = [JWTAuthentication] # 1. 토큰인증된 사람만 접근
     permission_classes = [IsAuthenticated, IsOnerAdminUser] # 2. 인증된 사람 중에서 자기 자신, admin유저만 접근
     queryset = User.objects.all()
