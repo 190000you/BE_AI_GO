@@ -5,7 +5,7 @@ from rest_framework import routers
 
 from .views import AnswerView
 
-namespace = "servey"
+namespace = "survey"
 
 router_answer = routers.DefaultRouter()
 

@@ -21,19 +21,22 @@ class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserModelSerializer
 
-class UserDetailView(generics.RetrieveAPIView):
-    
+class UserDetailView(generics.RetrieveUpdateAPIView):
+
     authentication_classes = [JWTAuthentication] # 1. 토큰인증된 사람만 접근
     permission_classes = [IsAuthenticated, IsOnerAdminUser] # 2. 인증된 사람 중에서 자기 자신, admin유저만 접근
     queryset = User.objects.all()
 
     lookup_url_kwarg = 'userId'
     def get_serializer_class(self):
-        return UserDetailSerializer if self.request.method == 'GET' else UserModelSerializer
+        if self.request.method == 'GET':
+            return UserDetailSerializer
+        else:
+            return UserModelSerializer
     
     def get_object(self):
         userId = self.kwargs.get('userId')
-        return get_object_or_404(User, userId=userId)
+        return get_object_or_404(User, pk=userId)
 
 class UserReviewListView(generics.ListAPIView):
     serializer_class = ReviewModelSerializer
@@ -53,6 +56,7 @@ class UserReviewListView(generics.ListAPIView):
     def get_object(self):
         userId = self.kwargs.get('userId')
         return get_object_or_404(User, userId=userId)
+    
     
 class UserSignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
