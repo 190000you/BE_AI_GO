@@ -1,6 +1,0 @@
-pandas
-catboost
-scikit-learn
-langchain_openai
-langchain_core.prompts
-langchain_core.output_parsers
