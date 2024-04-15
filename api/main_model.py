@@ -11,7 +11,7 @@ import re
 df = pd.read_csv(r"/Users/leehb/Desktop/BE_AI_GO/api/dataset.csv", encoding="cp949")
 
 # OpenAI API 키 설정
-os.environ['OPENAI_API_KEY'] ='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'
+os.environ['OPENAI_API_KEY'] =''
 
 llm = ChatOpenAI()
 
