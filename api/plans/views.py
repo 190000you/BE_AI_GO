@@ -1,13 +1,18 @@
 from django.shortcuts import render
 
 from rest_framework import generics, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import GenericAPIView
 from rest_framework import routers
 
-from .serializers import ScheduleModelSerializer, PlanModelSerializer, ScheduleCreateSerializer
+from .serializers import ScheduleModelSerializer, PlanModelSerializer, ScheduleCreateSerializer, ChatSerializer
 from .models import Schedule, Plan
+import main_model
+import re
+import pandas as pd
+
 # Create your views here.
 
 class ScheduleApiView(GenericAPIView):
@@ -38,4 +43,30 @@ class ScheduleApiView(GenericAPIView):
 class PlanViewSet(ModelViewSet):
     serializer_class = PlanModelSerializer
     queryset = Plan.objects.all()
-    
+
+class ChatAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        df = pd.read_csv(r"/Users/leehb/Desktop/BE_AI_GO/api/dataset.csv", encoding="cp949")
+        serializer = ChatSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            user_input = serializer.validated_data['user_input']
+            ai_response, _ = main_model.response(user_input, main_model.chat_history)
+            
+            pattern = re.findall(r'^.*?(?=1\.)', ai_response, re.DOTALL)
+            if pattern:
+                places = []
+                for item in pattern:
+                    # 이 부분에서 recommend 함수의 결과를 각 item에 대해 저장
+                    place = main_model.recommend(df, user_input, main_model.korean_stop_words)
+                    places.append({
+                        "가볼까": item.strip(),
+                        "response": place
+                    })
+                res = Response(places, status=status.HTTP_200_OK)
+            else:
+                # pattern이 없는 경우, ai_response 전체를 사용
+                res = Response({"가볼까": ai_response}, status=status.HTTP_200_OK)
+            return res
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

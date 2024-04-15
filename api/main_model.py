@@ -8,10 +8,10 @@ import pandas as pd
 import os
 import re
 
-df = pd.read_csv(r"C:\Users\jyjun\git\BE_AI_GO\api\dataset.csv", encoding="cp949")
+df = pd.read_csv(r"/Users/leehb/Desktop/BE_AI_GO/api/dataset.csv", encoding="cp949")
 
 # OpenAI API 키 설정
-os.environ['openai_api_key'] =''
+os.environ['OPENAI_API_KEY'] =''
 
 llm = ChatOpenAI()
 
@@ -87,7 +87,7 @@ def recommend(df, user_input, korean_stop_words):
 
     for place in recommended_places:
         print(place)
-
+    return recommended_places ##
 
 
 # 대화 시작
@@ -104,9 +104,10 @@ while True:
     
     pattern = re.findall(r'^.*?(?=1\.)', ai_response, re.DOTALL)
 
+    place = [] ##
     if pattern:
         for item in pattern:
             print("가볼까: ", item.strip())
-            recommend(df, user_input, korean_stop_words)
+            place = recommend(df, user_input, korean_stop_words) ##
     else:
         print("가볼까: ", ai_response)

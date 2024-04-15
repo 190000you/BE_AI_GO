@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer, CharField, DateTimeField, StringRelatedField
+from rest_framework import serializers
 
 from places.models import Place
 
@@ -35,3 +36,6 @@ class PlanModelSerializer(ModelSerializer):
     class Meta:
         model = Plan
         fields = "__all__"
+
+class ChatSerializer(serializers.Serializer):
+    user_input = serializers.CharField(max_length=1000)
