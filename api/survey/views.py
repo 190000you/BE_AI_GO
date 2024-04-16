@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.decorators import action
 
 from .serializers import EnrollmentSerializer
 from .models import Answer
@@ -19,7 +20,7 @@ class AnswerView(ModelViewSet):
     def get_permissions(self):
         permission_classes = list()
         action = self.action
-            
+        
         if action == ['list', ' create', 'retrieve']:
             permission_classes = [AllowAny]
         elif action in ['update', 'partial_update', 'destroy']:

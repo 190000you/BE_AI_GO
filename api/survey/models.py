@@ -34,6 +34,7 @@ from django.db import models
     #     # 'TRAVEL_MISSION_INT': int(input("Travel Mission (as a number): ")),
 
 class Answer(models.Model):
+    userId = models.OneToOneField('account.User', on_delete=models.CASCADE) 
     gender = models.TextField(verbose_name="성별", null=True, default='')
     ageGrp = models.IntegerField(verbose_name="나이대", null=True, default=0)
     travelStyl1 = models.IntegerField(verbose_name="장소", null=True, default=0)
@@ -44,6 +45,3 @@ class Answer(models.Model):
     travelStyl6 = models.IntegerField(verbose_name="계획", null=True, default=0)
     travelStyl7 = models.IntegerField(verbose_name="사진", null=True, default=0)
     travelStyl8 = models.IntegerField(verbose_name="동반자", null=True, default=0)
-    
-
-

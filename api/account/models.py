@@ -92,7 +92,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
-    survey = models.OneToOneField(Answer, on_delete=models.CASCADE, null=True) # 설문조사 모델 1:1 관계
+    survey = models.OneToOneField(Answer, on_delete=models.CASCADE, null=True)
 
     REQUIRED_FIELDS = ['userEmail', 'userName']
     objects = UserManager()

@@ -8,7 +8,7 @@ import pandas as pd
 import os
 import re
 
-df = pd.read_csv(r"/Users/leehb/Desktop/BE_AI_GO/api/dataset.csv", encoding="cp949")
+df = pd.read_csv(r"/Users/minsu/Desktop/Minsu/django_project/BE_AI_GO/api/dataset.csv", encoding="cp949")
 
 # OpenAI API 키 설정
 os.environ['OPENAI_API_KEY'] =''
