@@ -162,9 +162,9 @@ class UserLikeRegView(generics.GenericAPIView):
     # post매서드를 사용할때 로직
     def post(self, request):
         # 장소 이름을 받아와서
-        place_name = request.data.get('name')
+        place_id = request.data.get('id')
         # 디비에서 일치하는 장소를 찾기
-        place = get_object_or_404(Place, name=place_name)
+        place = get_object_or_404(Place, name=place_id)
         # 해당하는 데이터의 like 칼럼에 좋아요 누른 user 추가
         place.like.add(request.user)
         # 변경사항 저장
