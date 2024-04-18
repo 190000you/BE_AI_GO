@@ -1,14 +1,5 @@
-<<<<<<< HEAD
 pandas
 catboost
 scikit-learn
 langchain_openai
-langchain_core.prompts
-=======
-pandas
-catboost
-scikit-learn
-langchain_openai
-langchain_core.prompts
->>>>>>> d5b88bdf0 (Test)
-langchain_core.output_parsers
+langchain_core

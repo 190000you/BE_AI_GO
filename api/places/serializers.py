@@ -33,6 +33,7 @@ class PlaceModelSerializer(ModelSerializer):
     class Meta:
         model = Place
         fields = [
+            "id",
             "name",
             "image",
             "classification",
