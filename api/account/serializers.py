@@ -99,11 +99,11 @@ class ChangePassWordSerializer(serializers.Serializer):
         return user
     
 class UserLikePlaceSerializer(serializers.ModelSerializer):
-    name = serializers.PrimaryKeyRelatedField(queryset=Place.objects.all())
+    id = serializers.PrimaryKeyRelatedField(queryset=Place.objects.all())
 
     class Meta:
         model = Place
-        fields = ["name"]
+        fields = ["id"]
 
 class UserLikePlaceViewSerializer(serializers.ModelSerializer):
     class Meta:
