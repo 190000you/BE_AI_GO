@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from places.models import Place
 
-from .models import Schedule, Plan
+from .models import Schedule, Plan, chatDb
 
 
 class PlanNameSerializer(ModelSerializer):
@@ -39,3 +39,8 @@ class PlanModelSerializer(ModelSerializer):
 
 class ChatSerializer(serializers.Serializer):
     user_input = serializers.CharField(max_length=1000)
+
+class ChatDbSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = chatDb
+        fields = "__all__"

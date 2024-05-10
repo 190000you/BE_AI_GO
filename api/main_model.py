@@ -92,18 +92,18 @@ def recommend(df, user_input, korean_stop_words):
 
 # 대화 시작
 # print("대화를 시작합니다. 대화를 종료하려면 '고마워'라고 입력하세요.")
-
+#
 # while True:
 #     user_input = input("당신: ")
 #     if user_input.lower() == '고마워':
 #         print("대화를 종료합니다. 좋은 하루 되세요 😊")
 #         break
-
-#     # 응답 생성 및 출력
+#
+# #     # 응답 생성 및 출력
 #     ai_response, chat_history = response(user_input, chat_history)
-    
+#
 #     pattern = re.findall(r'^.*?(?=1\.)', ai_response, re.DOTALL)
-
+#
 #     place = [] ##
 #     if pattern:
 #         for item in pattern:
