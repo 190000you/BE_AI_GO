@@ -39,7 +39,19 @@ class ScheduleApiView(GenericAPIView):
                 return Response(data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=400)
-            
+    def patch(self, request):
+        serializer = self.get_serializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            start_date = serializer.validated_data.get('start_date')
+            end_date = serializer.validated_data.get('end_date')
+
+            if start_date and end_date and start_date > end_date:
+                return Response({'error': '올바른 시간을 입력하세요.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class PlanViewSet(ModelViewSet):
     serializer_class = PlanModelSerializer
     queryset = Plan.objects.all()

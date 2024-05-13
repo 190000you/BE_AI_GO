@@ -11,6 +11,13 @@ class PlanNameSerializer(ModelSerializer):
         model = Plan
         fields = ["name"]
 
+class PlanSerializer(ModelSerializer):
+    plan = Plan.objects.all()
+
+    class Meta:
+        model = Plan
+        fields = "__all__"
+
 class ScheduleModelSerializer(ModelSerializer):
     place = StringRelatedField()
     plan = StringRelatedField()
@@ -28,6 +35,9 @@ class ScheduleCreateSerializer(ModelSerializer):
     class Meta:
         model = Schedule
         fields = "__all__"
+
+class SchedulePatchSerializer(ModelSerializer):
+    plan = Plan.objects.all()
 
 class PlanModelSerializer(ModelSerializer):
 

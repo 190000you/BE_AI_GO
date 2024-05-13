@@ -7,7 +7,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 from .models import User
 from places.models import Place
-
+from plans.models import Plan
 
 class UserModelSerializer(ModelSerializer):
     class Meta:
@@ -99,13 +99,16 @@ class ChangePassWordSerializer(serializers.Serializer):
         return user
     
 class UserLikePlaceSerializer(serializers.ModelSerializer):
-    id = serializers.PrimaryKeyRelatedField(queryset=Place.objects.all())
-
     class Meta:
         model = Place
-        fields = ["id"]
+        fields = ["like", "name"]
 
 class UserLikePlaceViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
         fields = ["name","image","classification","street_name_address"]
+        
+class UserPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = "__all__"

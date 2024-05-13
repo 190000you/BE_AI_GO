@@ -9,11 +9,12 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 
 from .models import User
+from plans.models import Plan
 from places.models import Review, Place
 from places.serializers import ReviewModelSerializer
-from .serializers import SignUpSerializer, UserModelSerializer, UserDetailSerializer, LogInSerializer, AuthSerializer, ChangePassWordSerializer, UserLikePlaceSerializer, UserLikePlaceViewSerializer
+from .serializers import SignUpSerializer, UserModelSerializer, UserDetailSerializer, LogInSerializer, AuthSerializer, ChangePassWordSerializer, UserLikePlaceSerializer, UserLikePlaceViewSerializer, UserPlanSerializer
 from permission import IsOnerAdminUser
-
+from plans.serializers import PlanSerializer
 # Create your views here.
 
 
@@ -154,19 +155,20 @@ class ChangePasswordView(generics.GenericAPIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        ## 장소 찜하기
+        ## 장소 찜하기 (완)
 class UserLikeRegView(generics.GenericAPIView):
     serializer_class = UserLikePlaceSerializer
     authentication_classes = [JWTAuthentication]
 
     # post매서드를 사용할때 로직
     def post(self, request):
+        userId = request.data.get('like')
         # 장소 이름을 받아와서
-        place_id = request.data.get('id')
+        place_id = request.data.get('name')
         # 디비에서 일치하는 장소를 찾기
         place = get_object_or_404(Place, name=place_id)
-        # 해당하는 데이터의 like 칼럼에 좋아요 누른 user 추가
-        place.like.add(request.user)
+        # 해당하는 데이터의 like 칼럼에 좋아요 누른 userId 추가
+        place.like.add(userId)
         # 변경사항 저장
         place.save()
 
@@ -174,18 +176,41 @@ class UserLikeRegView(generics.GenericAPIView):
         serializer = self.get_serializer(place)
         # 제대로 됐다는 응답
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-    
-    ## 찜 한 장소 조회
-class UserLikeView(generics.GenericAPIView):
+
+class UserLikeView(generics.ListAPIView):
     serializer_class = UserLikePlaceViewSerializer
     authentication_classes = [JWTAuthentication]
 
-    # get 매서드 사용할 때
-    def get(self, request):
-        # 디비에서 filter를 사용하여 로그인 한 유저에 해당하는 한개 또는 여러개의 장소 찾기
-        # objects.get 을 하면 안됨. 여러개의 장소가 return 될 수 있기때문
-        like_place = Place.objects.filter(like=request.user)
-        # many=True를 해주는 이유는 시리얼라이저는 단일 인스턴스를 처리하게 설계됐는데, 여러개의 인스턴스를 처리하기위해 many=True 속성을 준다
-        serializer = self.get_serializer(like_place, many=True)
+    def get_queryset(self):
+        userId = self.kwargs['userId']  # URL로부터 userId를 가져온다
+        user = get_object_or_404(User, userId=userId)  # 해당 userId를 가진 User 객체를 가져온다
+        return user.liker.all()  # 해당 사용자가 좋아하는 모든 장소를 반환
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class UserUnLikeView(generics.GenericAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, userId, placeId):
+        user = get_object_or_404(User, userId=userId)
+        place = get_object_or_404(Place, id=placeId)
+
+        if user.liker.filter(id=placeId).exists():
+            user.liker.remove(place)
+            return Response({'message': 'Place has been unliked.'}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'error': 'Place not found in your likes.'}, status=status.HTTP_404_NOT_FOUND)
+
+class UserPlanView(generics.GenericAPIView):
+    serializer_class = UserPlanSerializer
+    authentication_classes = [JWTAuthentication]
+    
+    lookup_url_kwarg = 'userId'
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return PlanSerializer
+        else:
+            return PlanSerializer
+    
+    def get_object(self):
+        userId = self.kwargs.get('userId')
+        return get_object_or_404(Plan, user=userId)
