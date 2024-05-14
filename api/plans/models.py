@@ -21,3 +21,10 @@ class Plan(models.Model):
     
     def __str__(self):
         return self.name
+
+class chatDb(models.Model):
+    user_input = models.TextField(verbose_name="유저 질문")
+    chat_response = models.TextField(verbose_name="AI 답변")
+    user_input_date = models.DateTimeField(auto_now_add=True)
+    chat_response_date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)

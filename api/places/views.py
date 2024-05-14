@@ -40,7 +40,6 @@ class ReviewView(ModelViewSet):
 class PlaceFindView(generics.GenericAPIView):
     serializer_class = PlaceSearchSerializer
     queryset = Place.objects.none()  # 빈 쿼리셋 할당
-
     def post(self, request):
         name = request.data.get('name', '')
 

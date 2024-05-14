@@ -5,10 +5,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import GenericAPIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import routers
 
-from .serializers import ScheduleModelSerializer, PlanModelSerializer, ScheduleCreateSerializer, ChatSerializer
-from .models import Schedule, Plan
+from .serializers import ScheduleModelSerializer, PlanModelSerializer, ScheduleCreateSerializer, ChatSerializer, ChatDbSerializer
+from .models import Schedule, Plan, chatDb
 import main_model
 import re
 import pandas as pd
@@ -56,15 +58,19 @@ class PlanViewSet(ModelViewSet):
     serializer_class = PlanModelSerializer
     queryset = Plan.objects.all()
 
+
 class ChatAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         df = pd.read_csv(r"/Users/leehb/Desktop/BE_AI_GO/api/dataset.csv", encoding="cp949")
         serializer = ChatSerializer(data=request.data)
-        
+
         if serializer.is_valid():
             user_input = serializer.validated_data['user_input']
             ai_response, _ = main_model.response(user_input, main_model.chat_history)
-            
+
             pattern = re.findall(r'^.*?(?=1\.)', ai_response, re.DOTALL)
             if pattern:
                 places = []
@@ -79,6 +85,28 @@ class ChatAPIView(APIView):
             else:
                 # pattern이 없는 경우, ai_response 전체를 사용
                 res = Response({"가볼까": ai_response}, status=status.HTTP_200_OK)
+
+            try:
+                recommand_string = ', '.join(place)
+            except UnboundLocalError:
+                recommand_string = ''
+
+            pattern_string = ''.join(pattern)
+
+            ## 대화 내역 db에 저장
+            chat_instance = chatDb(user_input=user_input, chat_response=pattern_string + recommand_string,
+                                   user=request.user)
+            chat_instance.save()
+
             return res
-        
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ChatHistoryAPIView(generics.ListAPIView): # 채팅 기록 보기
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    serializer_class = ChatDbSerializer
+
+    def get_queryset(self):
+        return chatDb.objects.filter(user=self.request.user)
