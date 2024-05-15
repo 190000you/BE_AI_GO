@@ -6,12 +6,18 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.decorators import api_view, action
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Place, Tag, Review
 from .serializers import PlaceModelSerializer, TagModelSerializer, ReviewModelSerializer, PlaceSearchSerializer
 
 # Create your views here.
-
+class CustomPagination(PageNumberPagination):
+    page_size = 100
+    page_query_param = 'page'
+    page_size_query_param = 'size'
+    max_page_size = 100
+    
 class PlaceView(ModelViewSet):
     serializer_class = PlaceModelSerializer
     queryset = Place.objects.all()
@@ -30,7 +36,7 @@ class PlaceView(ModelViewSet):
 class TagView(ModelViewSet):
     serializer_class = TagModelSerializer
     queryset = Tag.objects.all()
-
+    pagination_class = CustomPagination  # 이 뷰에서는 커스텀 페이지네이션 사용
 
 class ReviewView(ModelViewSet):
     serializer_class = ReviewModelSerializer

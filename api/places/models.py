@@ -21,7 +21,6 @@ class Place(models.Model):
     def __str__(self):
         return self.name
 
-
 class Tag(models.Model):
     name = models.CharField(verbose_name="태그명", max_length=50, primary_key=True)
 
