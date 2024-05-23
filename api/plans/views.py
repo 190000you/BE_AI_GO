@@ -57,6 +57,8 @@ class ScheduleApiView(GenericAPIView):
 class PlanViewSet(ModelViewSet):
     serializer_class = PlanModelSerializer
     queryset = Plan.objects.all()
+    pagination_class = None
+
 
 
 class ChatAPIView(APIView):
@@ -64,7 +66,7 @@ class ChatAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        df = pd.read_csv(r"/Users/leehb/Desktop/BE_AI_GO/api/dataset.csv", encoding="cp949")
+        df = pd.read_csv(r"dataset.csv", encoding="cp949")
         serializer = ChatSerializer(data=request.data)
 
         if serializer.is_valid():
