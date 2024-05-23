@@ -10,7 +10,7 @@ from places.models import Place, Tag
 
 # CSV
 # df = pd.read_csv(r"/Users/leehb/Desktop/BE_AI_GO/api/dataset.csv", encoding='cp949')
-df = pd.read_csv(r"/Users/minsu/Desktop/Minsu/django_project/BE_AI_GO/api/dataset.csv", encoding='cp949')
+df = pd.read_csv(r"/srv/BE_AI_GO/api/dataset.csv", encoding='cp949')
 
 for index, row in df.iterrows():
     # 공백 기준으로 list로 불러오기
@@ -19,6 +19,16 @@ for index, row in df.iterrows():
     # 주차 여부 bool로 넣기
     parking_bool = (row["parking"] == "유")
     
+    if row["hardness"] == '-':
+        save_hardness = 0.0
+    else:
+        save_hardness = row["hardness"]
+
+    if row["latitude"] == '-':
+        save_latitude = 0.0
+    else:
+        save_latitude = row["latitude"]
+
     # db에 넣기
     place = Place.objects.create(
         name=row["name"],
@@ -28,8 +38,8 @@ for index, row in df.iterrows():
         parking=parking_bool,
         info=row["info"],
         call=row["call"],
-        hardness=row["hardness"],
-        latitude=row["latitude"],
+        hardness=save_hardness,
+        latitude=save_latitude,
         time=row["time"]
     )
     
