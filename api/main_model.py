@@ -11,7 +11,7 @@ import re
 df = pd.read_csv(r"dataset.csv", encoding="cp949")
 
 # OpenAI API 키 설정
-os.environ['openai_api_key'] =''
+os.environ['OPENAI_API_KEY'] =''
 
 llm = ChatOpenAI()
 
@@ -89,25 +89,25 @@ def recommend(df, user_input, korean_stop_words):
     for place in recommended_places:
         print(place)
 
+    return recommended_places
 
-
-# 대화 시작
-print("대화를 시작합니다. 대화를 종료하려면 '고마워'라고 입력하세요.")
-
-while True:
-    user_input = input("당신: ")
-    if user_input.lower() == '고마워':
-        print("대화를 종료합니다. 좋은 하루 되세요 😊")
-        break
-
-    # 응답 생성 및 출력
-    ai_response, chat_history = response(user_input, chat_history)
-    
-    pattern2 = re.findall(r'^.*?(?=1\.)', ai_response, re.DOTALL)
-
-    if pattern2:
-        for item in pattern2:
-            print("가볼까: ", item.strip())
-            recommend(df, user_input, korean_stop_words)
-    else:
-        print("가볼까: ", ai_response)
+# # 대화 시작
+# print("대화를 시작합니다. 대화를 종료하려면 '고마워'라고 입력하세요.")
+#
+# while True:
+#     user_input = input("당신: ")
+#     if user_input.lower() == '고마워':
+#         print("대화를 종료합니다. 좋은 하루 되세요 😊")
+#         break
+#
+#     # 응답 생성 및 출력
+#     ai_response, chat_history = response(user_input, chat_history)
+#
+#     pattern2 = re.findall(r'^.*?(?=1\.)', ai_response, re.DOTALL)
+#
+#     if pattern2:
+#         for item in pattern2:
+#             print("가볼까: ", item.strip())
+#             recommend(df, user_input, korean_stop_words)
+#     else:
+#         print("가볼까: ", ai_response)
