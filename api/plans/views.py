@@ -78,18 +78,18 @@ class ChatAPIView(APIView):
                     # 이 부분에서 recommend 함수의 결과를 각 item에 대해 저장
                     place = main_model.recommend(df, user_input, main_model.korean_stop_words)
                     places.append({
-                        "가볼까": item.strip(),
+                        "chat_response": item.strip(),
                         "response": place
                     })
                 res = Response(places, status=status.HTTP_200_OK)
             else:
                 # pattern이 없는 경우, ai_response 전체를 사용
-                res = Response({"가볼까": ai_response}, status=status.HTTP_200_OK)
+                res = Response({"chat_response": "안녕하세요! 가볼까? 입니다."}, status=status.HTTP_200_OK)
 
             try:
                 recommand_string = ', '.join(place)
             except UnboundLocalError:
-                recommand_string = ''
+                recommand_string = '안녕하세요! 가볼까? 입니다.'
 
             pattern_string = ''.join(pattern)
 
