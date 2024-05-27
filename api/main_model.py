@@ -91,7 +91,7 @@ def recommend(df, user_input, korean_stop_words):
 
     return recommended_places
 
-# # 대화 시작
+# 대화 시작
 # print("대화를 시작합니다. 대화를 종료하려면 '고마워'라고 입력하세요.")
 #
 # while True:

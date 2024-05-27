@@ -9,11 +9,14 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import routers
 
+from places.serializers import PlaceModelSerializer
+from places.models import Place
 from .serializers import ScheduleModelSerializer, PlanModelSerializer, ScheduleCreateSerializer, ChatSerializer, ChatDbSerializer
 from .models import Schedule, Plan, chatDb
 import main_model
 import re
 import pandas as pd
+from random import choice, shuffle
 
 # Create your views here.
 
@@ -112,3 +115,19 @@ class ChatHistoryAPIView(generics.ListAPIView): # 채팅 기록 보기
 
     def get_queryset(self):
         return chatDb.objects.filter(user=self.request.user)
+
+class DailyRecommandApiView(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = PlaceModelSerializer
+
+    def get_queryset(self):
+        pks = list(Place.objects.values_list('pk', flat=True).order_by('id'))
+        shuffle(pks)
+
+        # 5개의 랜덤한 pk 선택
+        selected_pks = pks[:5]
+
+        # 선택된 pk에 해당하는 Place 객체 리스트 반환
+        queryset = Place.objects.filter(pk__in=selected_pks)
+        return queryset
