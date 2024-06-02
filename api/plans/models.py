@@ -14,6 +14,12 @@ class Schedule(models.Model):
     
     def __str__(self):
         return self.place.name
+
+    def get_hardness(self):
+        return self.place.hardness
+
+    def get_latitude(self):
+        return self.place.latitude
     
 class Plan(models.Model):
     name = models.CharField(verbose_name='플랜명', max_length= 50)

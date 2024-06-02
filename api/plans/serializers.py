@@ -1,3 +1,4 @@
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer, CharField, DateTimeField, StringRelatedField
 from rest_framework import serializers
 
@@ -21,10 +22,18 @@ class PlanSerializer(ModelSerializer):
 class ScheduleModelSerializer(ModelSerializer):
     place = StringRelatedField()
     plan = StringRelatedField()
+    latitude = SerializerMethodField()
+    hardness = SerializerMethodField()
 
     class Meta:
         model = Schedule
         fields = "__all__"
+
+    def get_latitude(self, obj):
+        return obj.get_latitude()
+
+    def get_hardness(self, obj):
+        return obj.get_hardness()
 
 class ScheduleCreateSerializer(ModelSerializer):
     start_date = DateTimeField()
