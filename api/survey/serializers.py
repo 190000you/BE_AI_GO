@@ -22,7 +22,7 @@ class EnrollmentSerializer(ModelSerializer):
         else:
             # userId가 있는 경우 해당 사용자 검색
             try:
-                user = User.objects.get(pk=user_id)
+                user = User.objects.get(userId=user_id)
             except User.DoesNotExist:
                 # userId에 해당하는 사용자가 없는 경우 새로운 사용자 생성
                 user = User.objects.create_user(username=get_random_string(), password=None)
