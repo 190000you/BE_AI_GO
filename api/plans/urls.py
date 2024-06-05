@@ -19,7 +19,7 @@ from django.urls import path, include
 
 from rest_framework import routers
 
-from .views import ScheduleApiView, PlanViewSet, ChatAPIView, ChatHistoryAPIView, DailyRecommandApiView
+from .views import ScheduleApiView, PlanViewSet, ChatAPIView, ChatHistoryAPIView, DailyRecommandApiView, ScheduleDeleteView
 
 namespace = "plan"
 
@@ -32,4 +32,5 @@ urlpatterns = [
     path('recommand', ChatAPIView.as_view()),
     path('chathistory', ChatHistoryAPIView.as_view()),
     path('dailyrecommand', DailyRecommandApiView.as_view()),
+    path('schedule/delete', ScheduleDeleteView.as_view()),
 ]

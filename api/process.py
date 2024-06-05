@@ -46,29 +46,29 @@ for index, row in df.iterrows():
         image_file = None
 
     # db에 넣기
-    # place = Place.objects.create(
-    #     name=row["name"],
-    #     image=image_file,
-    #     classification=row["classification"],
-    #     street_name_address=row["street_name_adress"],
-    #     parking=parking_bool,
-    #     info=row["info"],
-    #     call=row["call"],
-    #     hardness=save_hardness,
-    #     latitude=save_latitude,
-    #     time=row["time"]
-    # )
+    place = Place.objects.create(
+        name=row["name"],
+        image=image_file,
+        classification=row["classification"],
+        street_name_address=row["street_name_adress"],
+        parking=parking_bool,
+        info=row["info"],
+        call=row["call"],
+        hardness=save_hardness,
+        latitude=save_latitude,
+        time=row["time"]
+    )
 
-    place = Place.objects.filter(name=row["name"]).first()
-    if place:
-        place.hardness = save_hardness
-        place.latitude = save_latitude
-        place.save()
+    # place = Place.objects.filter(name=row["name"]).first()
+    # if place:
+    #     place.hardness = save_hardness
+    #     place.latitude = save_latitude
+    #     place.save()
 
     # # 태그 추가
-    # for tag_name in tag_list:
-    #     tag, _ = Tag.objects.get_or_create(name=tag_name)
-    #     place.tag.add(tag)
+    for tag_name in tag_list:
+        tag, _ = Tag.objects.get_or_create(name=tag_name)
+        place.tag.add(tag)
 
     # 이미지 파일이 열려 있으면 닫기
     if image_file:
