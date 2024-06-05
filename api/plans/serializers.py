@@ -1,4 +1,4 @@
-from rest_framework.fields import SerializerMethodField
+from rest_framework.fields import SerializerMethodField, IntegerField
 from rest_framework.serializers import ModelSerializer, CharField, DateTimeField, StringRelatedField
 from rest_framework import serializers
 
@@ -44,6 +44,10 @@ class ScheduleCreateSerializer(ModelSerializer):
     class Meta:
         model = Schedule
         fields = "__all__"
+
+class ScheduleDeleteSerializer(serializers.Serializer):
+    plan_id = IntegerField()
+    schedule_id = IntegerField()
 
 class SchedulePatchSerializer(ModelSerializer):
     plan = Plan.objects.all()

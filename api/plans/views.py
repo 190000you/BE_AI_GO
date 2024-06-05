@@ -11,7 +11,7 @@ from rest_framework import routers
 
 from places.serializers import PlaceModelSerializer
 from places.models import Place
-from .serializers import ScheduleModelSerializer, PlanModelSerializer, ScheduleCreateSerializer, ChatSerializer, ChatDbSerializer
+from .serializers import ScheduleModelSerializer, PlanModelSerializer, ScheduleCreateSerializer, ChatSerializer, ChatDbSerializer, ScheduleDeleteSerializer
 from .models import Schedule, Plan, chatDb
 import main_model
 import re
@@ -57,6 +57,28 @@ class ScheduleApiView(GenericAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ScheduleDeleteView(GenericAPIView):
+    serializer_class = ScheduleDeleteSerializer
+
+    def delete(self, request):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            plan_id = serializer.validated_data.get('plan_id')
+            schedule_id = serializer.validated_data.get('schedule_id')
+
+            try:
+                schedule = Schedule.objects.get(id=schedule_id, plan_id=plan_id)
+                schedule.delete()
+                return Response({'message': '스케줄이 성공적으로 삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
+            except Schedule.DoesNotExist:
+                return Response({'error': '해당 스케줄을 찾을 수 없습니다.'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 class PlanViewSet(ModelViewSet):
     serializer_class = PlanModelSerializer
     queryset = Plan.objects.all()
