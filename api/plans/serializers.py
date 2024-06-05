@@ -46,7 +46,6 @@ class ScheduleCreateSerializer(ModelSerializer):
         fields = "__all__"
 
 class ScheduleDeleteSerializer(serializers.Serializer):
-    plan_id = IntegerField()
     schedule_id = IntegerField()
 
 class SchedulePatchSerializer(ModelSerializer):
