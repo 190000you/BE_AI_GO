@@ -65,11 +65,10 @@ class ScheduleDeleteView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
-            plan_id = serializer.validated_data.get('plan_id')
             schedule_id = serializer.validated_data.get('schedule_id')
 
             try:
-                schedule = Schedule.objects.get(id=schedule_id, plan_id=plan_id)
+                schedule = Schedule.objects.get(id=schedule_id)
                 schedule.delete()
                 return Response({'message': '스케줄이 성공적으로 삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
             except Schedule.DoesNotExist:
